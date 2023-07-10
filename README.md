@@ -1,7 +1,30 @@
 # DUnix
-With this program you can create a simple unix timestamp for Discord using a simple GUI. <br>
+With this program you can create a simple unix timestamp for Discord using a simple GUI.
 
 # Installation
+
+## Executeable
+Download the repository and execute the [dunix.exe](dist/dunix.exe) file inside the [dist](dist/) folder.
+
+
+## Build yourself
+This program only uses built-in python libraries, so a python installation is enough to build it. I'm using version `3.11.2` and it works perfectly fine. <br>
+<br>
+1. Download the repo to your local machine <br>
+2. Run the python command in your console/terminal, depending on your operating system <br>
+
+<br>
+Windows:
+
+```console
+python main.py
+```
+<br>
+Linux / MacOS:
+
+```console
+python3 main.py
+```
 
 # Usage
 ![The Program after you start it](images/start.png)
@@ -23,4 +46,4 @@ Click the create button once you selected the date, time and type and a popup wi
 
 ## Year
 The year option menu shows a range of 40 years, 15 years to the past and 25 years into the future. If you want to access earlier or later years change the constants `YEARS_PAST` or `YEARS_FUTURE` respectfully. <br>
- - Note: `YEARS_PAST` must be negative
+ > Note: `YEARS_PAST` must be negative
