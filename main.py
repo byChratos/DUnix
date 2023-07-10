@@ -300,6 +300,12 @@ class App(tk.Tk):
             self.popup("Invalid input for Second", "Error")
             return False
 
+    # * Close popup function
+    def close_popup(self):
+        self.popup_active = False
+        self.pp.destroy()
+
+    # * Placeholders for the Entries
     def remove_placeholder(self, event):
             placeholder_text = getattr(event.widget, "placeholder", "")
             if placeholder_text and event.widget.get() == placeholder_text:
@@ -310,7 +316,7 @@ class App(tk.Tk):
         if placeholder_text and event.widget.get() == "":
             event.widget.insert(0, placeholder_text)
 
-
+    # * Change the list of days available in the day OptionMenu
     def redoDay(self, selected):
         selected_day = self.day.get()
 
@@ -342,7 +348,7 @@ class App(tk.Tk):
 
         self.day_menu.pack(fill="both", expand=1)
 
-
+    # * Change hover color on okay button
     def on_enter_okay(self, event):
         event.widget['bg'] = self.lighter_blue
 
@@ -417,6 +423,7 @@ class App(tk.Tk):
 
         self.pp = tk.Toplevel()
         self.pp.wm_title(title)
+        self.pp.protocol("WM_DELETE_WINDOW", self.close_popup)
 
         self.pp.iconbitmap("favicon.ico")
 
@@ -439,15 +446,11 @@ class App(tk.Tk):
         self.pp_button_frame.pack_propagate(0)
         self.pp_button_frame.grid(row=1, column=0)
 
-        self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.okay_button, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white, cursor="hand2")
+        self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.close_popup, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white, cursor="hand2")
         self.pp_b.pack(fill="both", expand=1)
 
         self.pp_b.bind("<Enter>", self.on_enter_okay)
         self.pp_b.bind("<Leave>", self.on_leave_okay)
-
-    def okay_button(self):
-        self.popup_active = False
-        self.pp.destroy()
 
     #Create button logic
     def create(self):
