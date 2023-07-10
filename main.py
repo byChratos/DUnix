@@ -54,11 +54,12 @@ class App(tk.Tk):
 
         self.configure(background=self.dark_grey)
 
-        self.title('Discord Unix Timestamp Creator')
+        self.title('DUnix Timestamp Generator for Discord')
         self.font = ("Rubik", 15, "bold")
 
         #Bind resize function for dynamic resizing of widgets
         self.bind("<Configure>", self.resize)
+        self.iconbitmap("favicon.ico")
         
 
 
@@ -92,7 +93,7 @@ class App(tk.Tk):
         self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.dayList)
         self.day.set("1")
 
-        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
+        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"), cursor="hand2")
 
         self.day_menu.pack(fill="both", expand=1)
 
@@ -106,7 +107,7 @@ class App(tk.Tk):
         self.month_menu = tk.OptionMenu(self.month_frame, self.month, *self.month_list, command=self.redoDay)
         self.month.set(self.month_list[0])
 
-        self.month_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
+        self.month_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"), cursor="hand2")
 
         self.month_menu.pack(fill="both", expand=1)
 
@@ -128,7 +129,7 @@ class App(tk.Tk):
         self.year_menu = tk.OptionMenu(self.year_frame, self.year, *self.yearList, command=self.redoDay)
         self.year.set(thisYear)
 
-        self.year_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
+        self.year_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"), cursor="hand2")
 
         self.year_menu.pack(fill="both", expand=1)
 
@@ -228,17 +229,6 @@ class App(tk.Tk):
         self.radio_frame.grid_propagate(0)
         self.radio_frame.grid(row=1, column=0, padx=10, pady=0)
 
-        #Arguments:
-        #<t:1543392060> default                 28 November 2018 09:01
-        #<t:1543392060:t> short time            09:01
-        #<t:1543392060:T> long time             09:01:00
-        #<t:1543392060:d> short date            28/11/2018
-        #<t:1543392060:D> long date             28 November 2018
-        #<t:1543392060:f> short datetime        28 November 2018 09:01
-        #<t:1543392060:F> long datetime         Wednesday, 28 November 2018 09:01
-        #<t:1543392060:R> relative              3 years ago
-        #https://gist.github.com/LeviSnoot/d9147767abeef2f770e9ddcd91eb85aa
-
 
         # * Radio button frames
         self.radio_button_frames = []
@@ -264,7 +254,7 @@ class App(tk.Tk):
         i = 0
         for (name, value) in test:
             master = self.radio_button_frames[i]
-            self.buttons.append(tk.Radiobutton(master=master, padx=0, pady=0, width=20, font=("Rubik", 12, "normal"), bd=0, text=name, value=value, variable=self.selection, indicatoron=0, bg=self.light_grey, fg=self.white, selectcolor=self.light_blue, activebackground=self.blue, activeforeground=self.white))
+            self.buttons.append(tk.Radiobutton(master=master, padx=0, pady=0, width=20, font=("Rubik", 12, "normal"), bd=0, text=name, value=value, variable=self.selection, indicatoron=0, bg=self.light_grey, fg=self.white, selectcolor=self.light_blue, activebackground=self.blue, activeforeground=self.white, cursor="hand2"))
             self.buttons[i].pack(fill='both', expand=1)
 
             self.buttons[i].bind("<Enter>", self.on_enter_radio)
@@ -282,7 +272,7 @@ class App(tk.Tk):
         self.button_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
         # * Create button
-        self.create_button = tk.Button(master=self.button_frame, text='Create', command=self.create, bg=self.green, fg=self.dark_grey, bd=0, activebackground=self.dark_green, activeforeground=self.dark_grey, font=self.font)
+        self.create_button = tk.Button(master=self.button_frame, text='Create', command=self.create, bg=self.green, fg=self.dark_grey, bd=0, activebackground=self.dark_green, activeforeground=self.dark_grey, font=self.font, cursor="hand2")
         self.create_button.pack(fill='both', expand=1)
 
         #Bind enter and leave events to functions for the hover color change
@@ -293,21 +283,21 @@ class App(tk.Tk):
         if P == "Hour" or (str.isdigit(P) and (int(P) in self.hour_list)) or P == "":
             return True
         else:
-            self.popup("Invalid input for Hour.")
+            self.popup("Invalid input for Hour.", "Error")
             return False
         
     def validate_minute(self, P):
         if P == "Minutes" or (str.isdigit(P) and (int(P) in self.minute_and_second_list)) or P == "":
             return True
         else:
-            self.popup("Invalid input for Minute")
+            self.popup("Invalid input for Minute", "Error")
             return False
         
     def validate_second(self, P):
         if P == "Seconds" or (str.isdigit(P) and (int(P) in self.minute_and_second_list)) or P == "":
             return True
         else:
-            self.popup("Invalid input for Second")
+            self.popup("Invalid input for Second", "Error")
             return False
 
     def remove_placeholder(self, event):
@@ -419,14 +409,16 @@ class App(tk.Tk):
         event.widget['bg'] = self.light_grey
         event.widget['selectcolor'] = self.light_blue
 
-    def popup(self, text):
+    def popup(self, text, title):
         if self.popup_active:
             return
 
         self.popup_active = True
 
         self.pp = tk.Toplevel()
-        self.pp.wm_title("Test")
+        self.pp.wm_title(title)
+
+        self.pp.iconbitmap("favicon.ico")
 
         self.pp.bind("<Configure>", self.resize_popup)
 
@@ -447,7 +439,7 @@ class App(tk.Tk):
         self.pp_button_frame.pack_propagate(0)
         self.pp_button_frame.grid(row=1, column=0)
 
-        self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.okay_button, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white)
+        self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.okay_button, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white, cursor="hand2")
         self.pp_b.pack(fill="both", expand=1)
 
         self.pp_b.bind("<Enter>", self.on_enter_okay)
@@ -479,7 +471,7 @@ class App(tk.Tk):
         second = self.second_entry.get()
 
         if hour == "Hour" or minute == "Minutes" or second == "Seconds" or hour == '' or minute == '' or second == '':
-            self.popup("You have to specify Hour, Minutes and Seconds")
+            self.popup("You have to specify Hour, Minutes and Seconds", "Error")
             return
 
         selection = self.selection.get()
@@ -492,7 +484,7 @@ class App(tk.Tk):
         else:
             unix_string = f"<t:{unix}:{selection}>"
 
-        self.popup(f"Your unix timestamp is: {unix_string}")
+        self.popup(f"Your unix timestamp is: {unix_string}", "DUnix")
 
 
 # * Main function

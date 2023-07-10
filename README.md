@@ -1,2 +1,26 @@
-# discordUnixTimestamp
-Python Program to create a Discord Unix Timestamp
+# DUnix
+With this program you can create a simple unix timestamp for Discord using a simple GUI. <br>
+
+# Installation
+
+# Usage
+![The Program after you start it](images/start.png)
+
+## Specifying the date
+To specify the date just click on one of the three option menus and select the day, month and year of your desired timestamp.
+
+## Specifying the time
+To specify the time just click on the specific entry of the hour, minutes or seconds and type the time you want.
+
+## Choosing the type
+To specify the type your timestamp should represent, just click one of the radiobuttons.
+
+## Create
+Click the create button once you selected the date, time and type and a popup will appear containing your unix timestamp. <br>
+![Created timestamp](images/success.png)
+
+# Modifying the program
+
+## Year
+The year option menu shows a range of 40 years, 15 years to the past and 25 years into the future. If you want to access earlier or later years change the constants `YEARS_PAST` or `YEARS_FUTURE` respectfully. <br>
+ - Note: `YEARS_PAST` must be negative
