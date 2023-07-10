@@ -11,7 +11,9 @@ Download the repository and execute the [dunix.exe](dist/dunix.exe) file inside 
 This program only uses built-in python libraries, so a python installation is enough to build it. I'm using version `3.11.2` and it works perfectly fine. <br>
 <br>
 1. Download the repo to your local machine <br>
-2. Run the python command in your console/terminal, depending on your operating system <br>
+2. Open a local terminal
+3. Navigate to the repository in your terminal
+4. Run the python command in your terminal, depending on your operating system <br>
 
 <br>
 Windows:
