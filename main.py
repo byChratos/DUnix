@@ -1,5 +1,6 @@
 import tkinter as tk
 import datetime
+import time
 from calendar import month_name, monthrange
 
 # ! Change to values depending on what years you want to see in the OptionMenu
@@ -11,6 +12,8 @@ class App(tk.Tk):
 
     def __init__(self):
         super().__init__()
+
+        self.popup_active = False
 
         self.month_list: list = []
         for month in month_name:
@@ -47,7 +50,7 @@ class App(tk.Tk):
         self.height = 600
         self.width = 900
         self.geometry('900x600')
-        self.minsize(600, 350)
+        self.minsize(650, 350)
 
         self.configure(background=self.dark_grey)
 
@@ -89,7 +92,7 @@ class App(tk.Tk):
         self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.dayList)
         self.day.set("1")
 
-        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0)
+        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
 
         self.day_menu.pack(fill="both", expand=1)
 
@@ -103,7 +106,7 @@ class App(tk.Tk):
         self.month_menu = tk.OptionMenu(self.month_frame, self.month, *self.month_list, command=self.redoDay)
         self.month.set(self.month_list[0])
 
-        self.month_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0)
+        self.month_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
 
         self.month_menu.pack(fill="both", expand=1)
 
@@ -125,7 +128,7 @@ class App(tk.Tk):
         self.year_menu = tk.OptionMenu(self.year_frame, self.year, *self.yearList, command=self.redoDay)
         self.year.set(thisYear)
 
-        self.year_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0)
+        self.year_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
 
         self.year_menu.pack(fill="both", expand=1)
 
@@ -141,10 +144,69 @@ class App(tk.Tk):
         self.time_label = tk.Label(master=self.time_frame, text='Time', font=("Rubik", round((600/100)*4), "normal"), background=self.light_grey, bd=0, fg=self.white)
         self.time_label.grid(row=0, column=0, padx=8, pady=8)
 
-        # TODO Hour
-        # TODO Minute
-        # TODO Second
 
+
+        # ! Hour
+        self.hour_frame = tk.Frame(master=self.time_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
+        self.hour_frame.pack_propagate(0)
+        self.hour_frame.grid(row=2, column=0, padx=10, pady=10)
+
+        self.hour_list: list = []
+        for i in range(24):
+            self.hour_list.append(i)
+
+        vcmd_hour = (self.register(self.validate_hour))
+        self.hour_entry = tk.Entry(master=self.hour_frame, validate="all", validatecommand=(vcmd_hour, '%P'))
+        self.hour_entry.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, selectbackground=self.dark_grey, selectforeground=self.white, justify="center", font=("Rubik", 12, "normal"))
+
+        # * Default text
+        self.hour_entry.placeholder = "Hour"
+        self.hour_entry.insert("end", self.hour_entry.placeholder)
+
+        self.hour_entry.pack(fill="both", expand=1)
+
+        self.hour_entry.bind("<FocusIn>", self.remove_placeholder)
+        self.hour_entry.bind("<FocusOut>", self.add_placeholder)
+
+        # ! Minute
+        self.minute_frame = tk.Frame(master=self.time_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
+        self.minute_frame.pack_propagate(0)
+        self.minute_frame.grid(row=2, column=1, padx=10, pady=10)
+
+        self.minute_and_second_list: list = []
+        for i in range(60):
+            self.minute_and_second_list.append(i)
+
+        vcmd_minute = (self.register(self.validate_minute))
+        self.minute_entry = tk.Entry(master=self.minute_frame, validate="all", validatecommand=(vcmd_minute, '%P'))
+        self.minute_entry.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, selectbackground=self.dark_grey, selectforeground=self.white, justify="center", font=("Rubik", 12, "normal"))
+
+        # * Default text
+        self.minute_entry.placeholder = "Minutes"
+        self.minute_entry.insert("end", self.minute_entry.placeholder)
+
+        self.minute_entry.pack(fill="both", expand=1)
+
+        self.minute_entry.bind("<FocusIn>", self.remove_placeholder)
+        self.minute_entry.bind("<FocusOut>", self.add_placeholder)
+
+        # ! Second
+        self.second_frame = tk.Frame(master=self.time_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
+        self.second_frame.pack_propagate(0)
+        self.second_frame.grid(row=2, column=2, padx=10, pady=10)
+
+        vcmd_second = (self.register(self.validate_second))
+        self.second_entry = tk.Entry(master=self.second_frame, validate="all", validatecommand=(vcmd_second, '%P'))
+        self.second_entry.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, selectbackground=self.dark_grey, selectforeground=self.white, justify="center", font=("Rubik", 12, "normal"))
+
+        # * Default text
+        self.second_entry.placeholder = "Seconds"
+        self.second_entry.insert("end", self.second_entry.placeholder)
+
+        self.second_entry.pack(fill="both", expand=1)
+
+        self.second_entry.bind("<FocusIn>", self.remove_placeholder)
+        self.second_entry.bind("<FocusOut>", self.add_placeholder)
 
 
         # * Frame for the argument
@@ -227,6 +289,37 @@ class App(tk.Tk):
         self.create_button.bind("<Enter>", self.on_enter)
         self.create_button.bind("<Leave>", self.on_leave)
 
+    def validate_hour(self, P):
+        if P == "Hour" or (str.isdigit(P) and (int(P) in self.hour_list)) or P == "":
+            return True
+        else:
+            self.popup("Invalid input for Hour.")
+            return False
+        
+    def validate_minute(self, P):
+        if P == "Minutes" or (str.isdigit(P) and (int(P) in self.minute_and_second_list)) or P == "":
+            return True
+        else:
+            self.popup("Invalid input for Minute")
+            return False
+        
+    def validate_second(self, P):
+        if P == "Seconds" or (str.isdigit(P) and (int(P) in self.minute_and_second_list)) or P == "":
+            return True
+        else:
+            self.popup("Invalid input for Second")
+            return False
+
+    def remove_placeholder(self, event):
+            placeholder_text = getattr(event.widget, "placeholder", "")
+            if placeholder_text and event.widget.get() == placeholder_text:
+                event.widget.delete(0, "end")
+
+    def add_placeholder(self, event):
+        placeholder_text = getattr(event.widget, "placeholder", "")
+        if placeholder_text and event.widget.get() == "":
+            event.widget.insert(0, placeholder_text)
+
 
     def redoDay(self, selected):
         selected_day = self.day.get()
@@ -255,10 +348,16 @@ class App(tk.Tk):
         else:
             self.day.set("1")
 
-        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0)
+        self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"))
 
         self.day_menu.pack(fill="both", expand=1)
 
+
+    def on_enter_okay(self, event):
+        event.widget['bg'] = self.lighter_blue
+
+    def on_leave_okay(self, event):
+        event.widget['bg'] = self.light_blue
 
     #Widget resizing if window resizes
     def resize(self, event):
@@ -290,6 +389,18 @@ class App(tk.Tk):
             self.month_frame.config(width=menu_width)
             self.year_frame.config(width=menu_width)
 
+            self.hour_frame.config(width=menu_width)
+            self.minute_frame.config(width=menu_width)
+            self.second_frame.config(width=menu_width)
+
+    def resize_popup(self, event):
+        if(event.widget == self.pp and (self.pp.width != event.width or self.pp.height != event.height)):
+            self.pp.height = event.height
+            self.pp.width = event.width
+
+            self.pp_button_frame.config(width=event.width)
+            self.pp_text_frame.config(width=event.width, height=event.height-50)
+
     #Button hover color
     def on_enter(self, event):
         self.create_button.config(bg=self.light_green)
@@ -308,10 +419,80 @@ class App(tk.Tk):
         event.widget['bg'] = self.light_grey
         event.widget['selectcolor'] = self.light_blue
 
+    def popup(self, text):
+        if self.popup_active:
+            return
+
+        self.popup_active = True
+
+        self.pp = tk.Toplevel()
+        self.pp.wm_title("Test")
+
+        self.pp.bind("<Configure>", self.resize_popup)
+
+        self.pp.height = 150
+        self.pp.width = 400
+        self.pp.minsize(400, 150)
+
+        self.pp_text_frame = tk.Frame(master=self.pp, width=400, height=100)
+        self.pp_text_frame.pack_propagate(0)
+        self.pp_text_frame.grid(row=0, column=0)
+
+        self.pp_text_entry = tk.Entry(self.pp_text_frame)
+        self.pp_text_entry.insert(0, text)
+        self.pp_text_entry.config(state="readonly", readonlybackground=self.light_grey, fg=self.white, font=("Rubik", 12, "normal"), border=0, borderwidth=0, justify="center")
+        self.pp_text_entry.pack(fill="both", expand=1)
+
+        self.pp_button_frame = tk.Frame(master=self.pp, width=400, height=50, padx=0, pady=0)
+        self.pp_button_frame.pack_propagate(0)
+        self.pp_button_frame.grid(row=1, column=0)
+
+        self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.okay_button, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white)
+        self.pp_b.pack(fill="both", expand=1)
+
+        self.pp_b.bind("<Enter>", self.on_enter_okay)
+        self.pp_b.bind("<Leave>", self.on_leave_okay)
+
+    def okay_button(self):
+        self.popup_active = False
+        self.pp.destroy()
+
     #Create button logic
     def create(self):
-        # TODO Create Button logic
-        print(self.selection.get())
+        #Arguments:
+        #<t:1543392060> default                 28 November 2018 09:01
+        #<t:1543392060:t> short time            09:01
+        #<t:1543392060:T> long time             09:01:00
+        #<t:1543392060:d> short date            28/11/2018
+        #<t:1543392060:D> long date             28 November 2018
+        #<t:1543392060:f> short datetime        28 November 2018 09:01
+        #<t:1543392060:F> long datetime         Wednesday, 28 November 2018 09:01
+        #<t:1543392060:R> relative              3 years ago
+        #https://gist.github.com/LeviSnoot/d9147767abeef2f770e9ddcd91eb85aa
+
+        day = self.day.get()
+        month = self.month.get()
+        year = self.year.get()
+
+        hour = self.hour_entry.get()
+        minute = self.minute_entry.get()
+        second = self.second_entry.get()
+
+        if hour == "Hour" or minute == "Minutes" or second == "Seconds" or hour == '' or minute == '' or second == '':
+            self.popup("You have to specify Hour, Minutes and Seconds")
+            return
+
+        selection = self.selection.get()
+
+        date_time = datetime.datetime(int(year), self.month_list.index(month)+1, int(day), int(hour), int(minute), int(second))
+        unix = str(int(time.mktime(date_time.timetuple())))
+
+        if selection == "default":
+            unix_string = f"<t:{unix}>"
+        else:
+            unix_string = f"<t:{unix}:{selection}>"
+
+        self.popup(f"Your unix timestamp is: {unix_string}")
 
 
 # * Main function
