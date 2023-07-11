@@ -13,37 +13,29 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.popup_active = False
-
-        self.month_list: list = []
-        for month in month_name:
-            if month == '':
-                continue
-            else:
-                self.month_list.append(month)
-
-        # * Colors
+        # * Grey colors for the background
         self.dark_grey = '#2b2d31'
         self.light_grey = '#313338'
         self.lighter_grey = '#3a3c40'
 
+        # * Green colors for the create button
         self.green = '#2bbf6c'
         self.dark_green = '#23a55a'
         self.light_green = '#31ea7f'
 
+        # * White color for the font
         self.white = '#dbdee1'
 
+        # * Blue colors for buttons or entries
         self.blue = '#4752c4'
         self.light_blue = '#5c6aff'
         self.lighter_blue = '#635cff'
 
 
-
+        # * Debugging colors
         self.debug_blue = '#323ea8'
         self.debug_red = '#c42142'
         self.debug_pink = '#e37f93'
-
-
 
 
         # * Geometry of window
@@ -60,9 +52,10 @@ class App(tk.Tk):
         #Bind resize function for dynamic resizing of widgets
         self.bind("<Configure>", self.resize)
         self.iconbitmap("favicon.ico")
+
+        #popup variable, true if a popup exists, false if otherwise, blocks creation of multiple popups
+        self.popup_active = False
         
-
-
 
 
         # * Frame for date input
@@ -75,22 +68,26 @@ class App(tk.Tk):
 
 
         # ! Day
-        self.dayList: list = []
+
+        #List of days for the option menu
+        self.day_list: list = []
         for i in range(32):
             if i == 0:
                 continue
             else:
-                self.dayList.append(i)
+                self.day_list.append(i)
 
         menu_width = round((((900-40)/2)-60)/3)
 
+        #Frame for the day option menu
         self.day_frame = tk.Frame(master=self.date_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
         self.day_frame.pack_propagate(0)
         self.day_frame.grid(row=1, column=0, padx=10, pady=10)
 
 
+        #Day option menu
         self.day = tk.StringVar()
-        self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.dayList)
+        self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.day_list)
         self.day.set("1")
 
         self.day_menu.config(bg=self.light_blue, fg=self.white, border=0, borderwidth=0, activebackground=self.lighter_blue, activeforeground=self.white, highlightthickness=0, indicatoron=0, font=("Rubik", 12, "normal"), cursor="hand2")
@@ -99,10 +96,20 @@ class App(tk.Tk):
 
 
         # ! Month
+        #Frame for the month option menu
         self.month_frame = tk.Frame(master=self.date_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
         self.month_frame.pack_propagate(0)
         self.month_frame.grid(row=1, column=1, padx=10, pady=10)
 
+        #Months for the option menu
+        self.month_list: list = []
+        for month in month_name:
+            if month == '':
+                continue
+            else:
+                self.month_list.append(month)
+
+        #Month option menu
         self.month = tk.StringVar()
         self.month_menu = tk.OptionMenu(self.month_frame, self.month, *self.month_list, command=self.redoDay)
         self.month.set(self.month_list[0])
@@ -112,6 +119,7 @@ class App(tk.Tk):
         self.month_menu.pack(fill="both", expand=1)
 
         # ! Year
+        #List of years for the option menu
         self.yearList: list = []
         today = datetime.date.today()
         thisYear = today.year
@@ -120,11 +128,12 @@ class App(tk.Tk):
             # ! appends all years in a range of year years from today (15 years past - 25 years future)
             self.yearList.append(thisYear + i)
 
-
+        #Year frame for the option menu
         self.year_frame = tk.Frame(master=self.date_frame, padx=0, pady=0, width=menu_width, height=50, bg=self.light_blue)
         self.year_frame.pack_propagate(0)
         self.year_frame.grid(row=1, column=2, padx=10, pady=10)
 
+        #Year option menu
         self.year = tk.StringVar()
         self.year_menu = tk.OptionMenu(self.year_frame, self.year, *self.yearList, command=self.redoDay)
         self.year.set(thisYear)
@@ -421,31 +430,37 @@ class App(tk.Tk):
 
         self.popup_active = True
 
+        #Create window
         self.pp = tk.Toplevel()
         self.pp.wm_title(title)
         self.pp.protocol("WM_DELETE_WINDOW", self.close_popup)
-
-        self.pp.iconbitmap("favicon.ico")
-
         self.pp.bind("<Configure>", self.resize_popup)
 
+        #Icon
+        self.pp.iconbitmap("favicon.ico")
+
+        #Geometry
         self.pp.height = 150
         self.pp.width = 400
         self.pp.minsize(400, 150)
 
+        #Frame for the text
         self.pp_text_frame = tk.Frame(master=self.pp, width=400, height=100)
         self.pp_text_frame.pack_propagate(0)
         self.pp_text_frame.grid(row=0, column=0)
 
+        #Entry as text (because you can select and copy text from it)
         self.pp_text_entry = tk.Entry(self.pp_text_frame)
         self.pp_text_entry.insert(0, text)
         self.pp_text_entry.config(state="readonly", readonlybackground=self.light_grey, fg=self.white, font=("Rubik", 12, "normal"), border=0, borderwidth=0, justify="center")
         self.pp_text_entry.pack(fill="both", expand=1)
 
+        #Button frame
         self.pp_button_frame = tk.Frame(master=self.pp, width=400, height=50, padx=0, pady=0)
         self.pp_button_frame.pack_propagate(0)
         self.pp_button_frame.grid(row=1, column=0)
 
+        #Button
         self.pp_b = tk.Button(self.pp_button_frame, text="Okay", command=self.close_popup, border=0, borderwidth=0, bg=self.light_blue, fg=self.white, font=("Rubik", 12, "normal"), activebackground=self.blue, activeforeground=self.white, cursor="hand2")
         self.pp_b.pack(fill="both", expand=1)
 
@@ -473,15 +488,18 @@ class App(tk.Tk):
         minute = self.minute_entry.get()
         second = self.second_entry.get()
 
+        #Popup if values are missing
         if hour == "Hour" or minute == "Minutes" or second == "Seconds" or hour == '' or minute == '' or second == '':
             self.popup("You have to specify Hour, Minutes and Seconds", "Error")
             return
 
         selection = self.selection.get()
 
+        #Generating time from inputs
         date_time = datetime.datetime(int(year), self.month_list.index(month)+1, int(day), int(hour), int(minute), int(second))
         unix = str(int(time.mktime(date_time.timetuple())))
 
+        #Creation of unix string
         if selection == "default":
             unix_string = f"<t:{unix}>"
         else:
