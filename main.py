@@ -64,7 +64,7 @@ class App(tk.Tk):
         self.date_frame.grid(row=0, column=0, padx=10, pady=10)
 
         self.date_label = tk.Label(master=self.date_frame, text='Date', font=("Rubik", round((600/100)*4), "normal"), background=self.light_grey, bd=0, fg=self.white)
-        self.date_label.grid(row=0, column=0, padx=8, pady=8)
+        self.date_label.grid(row=0, column=0, padx=8, pady=8, sticky='wn')
 
 
         # ! Day
@@ -152,7 +152,7 @@ class App(tk.Tk):
         self.time_frame.grid(row=0, column=1, padx=10, pady=10)
 
         self.time_label = tk.Label(master=self.time_frame, text='Time', font=("Rubik", round((600/100)*4), "normal"), background=self.light_grey, bd=0, fg=self.white)
-        self.time_label.grid(row=0, column=0, padx=8, pady=8)
+        self.time_label.grid(row=0, column=0, padx=8, pady=8, sticky='wn')
 
 
 
@@ -331,7 +331,7 @@ class App(tk.Tk):
 
         # * Clear old day optionMenu
         self.day_menu.pack_forget()
-        self.dayList.clear()
+        self.day_list.clear()
 
         # * Get month and number of days in the month of the currently selected year
         month_number = self.month_list.index(self.month.get()) + 1
@@ -342,13 +342,13 @@ class App(tk.Tk):
             if i == 0:
                 continue
             else:
-                self.dayList.append(i)
+                self.day_list.append(i)
 
         # * Create new optionMenu
         self.day = tk.StringVar()
-        self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.dayList)
+        self.day_menu = tk.OptionMenu(self.day_frame, self.day, *self.day_list)
 
-        if int(selected_day) in self.dayList:
+        if int(selected_day) in self.day_list:
             self.day.set(selected_day)
         else:
             self.day.set("1")
