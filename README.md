@@ -3,13 +3,12 @@ With this program you can create a simple unix timestamp for Discord using a sim
 
 # Installation
 
-## Executeable
+## Executeable (Windows only)
 Download the repository and execute the [dunix.exe](dist/dunix.exe) file inside the [dist](dist/) folder.
 
 
 ## Build yourself
 This program only uses built-in python libraries, so a python installation is enough to build it. I'm using version `3.11.2` and it works perfectly fine. <br>
-<br>
 1. Download the repo to your local machine <br>
 2. Open a local terminal
 3. Navigate to the repository in your terminal
